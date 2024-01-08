@@ -2,7 +2,9 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import sys
 from io import StringIO
+import os
 import contextlib
+import subprocess
 
 app = FastAPI(
     title="PyAPI",
@@ -12,7 +14,10 @@ app = FastAPI(
 
 class CodeExecutionRequest(BaseModel):
     code: str
+    folder: str
 
+ROOT_FOLDER = os.getcwd() + '/tmp'
+os.chdir(ROOT_FOLDER)
 
 @contextlib.contextmanager
 def stdoutIO(stdout=None):
@@ -25,21 +30,36 @@ def stdoutIO(stdout=None):
 
 
 @app.get("/")
-async def root():
+async def root() -> dict:
     '''Root endpoint; confirm the app is up and running'''
     return {"message": "Hello World"}
 
 
 @app.post("/execute/")
-async def execute_code(req: CodeExecutionRequest):
+async def execute_code(req: CodeExecutionRequest) -> dict:
     '''Exceute arbitrary python code from a string input and return the result'''
-    code = req.code
     try:
-        with stdoutIO() as s:
-            exec(code)
-        return {"result": s.getvalue()}
+        # with stdoutIO() as s:
+        if not os.path.exists(ROOT_FOLDER + '/' + req.folder):
+            mkdir_cmd = f"mkdir -p {ROOT_FOLDER + '/' + req.folder}"
+            os.system(mkdir_cmd)
+        os.chdir(ROOT_FOLDER + '/' + req.folder)
+
+        # Run the code in a separate subprocess
+        process = subprocess.Popen(
+            ['python', '-c', req.code],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        stdout, stderr = process.communicate()
+
+        if process.returncode != 0:
+            raise HTTPException(status_code=400, detail=f"Error: {stderr.decode()}")
+
+        return {"result": stdout.decode()}
+
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
