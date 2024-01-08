@@ -26,11 +26,13 @@ def stdoutIO(stdout=None):
 
 @app.get("/")
 async def root():
+    '''Root endpoint; confirm the app is up and running'''
     return {"message": "Hello World"}
 
 
 @app.post("/execute/")
 async def execute_code(req: CodeExecutionRequest):
+    '''Exceute arbitrary python code from a string input and return the result'''
     code = req.code
     try:
         with stdoutIO() as s:
