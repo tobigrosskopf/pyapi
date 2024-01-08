@@ -12,6 +12,10 @@ You need to have [docker](https://www.docker.com/) or a similar conatiner engine
 2. Navigate to the project directory: `cd PyAPI`
 3. Run `docker-compose up` to start the app
 
+## Usage
+Interactive documentation available at [localhost:8000/docs](http://localhost:8000/docs)\
+Use the `exceute` POST endpoint to exceute arbitrary python code from a string. Output images will b e placed in the specified `folder`
+
 ## Contributing
 Contributions are welcome! If you would like to contribute to this project, please follow these steps:
 1. Fork the repository.

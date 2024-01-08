@@ -1,1 +1,3 @@
 app/__pycache__/*
+tmp/*
+!tmp/readme.md
