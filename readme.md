@@ -1,7 +1,8 @@
 # PyAPI
 
 ## Description
-PyAPI is a Python-based API application that allows users to interact with various APIs and perform different operations.
+PyAPI is a Python FastAPI-based application that allows execution of python code from a string input.
+Enables code interpreter environments for LLM's.
 
 ## Pre-requisits
 You need to have [docker](https://www.docker.com/) or a similar conatiner engine installed
