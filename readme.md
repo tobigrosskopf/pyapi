@@ -2,7 +2,7 @@
 
 ## Description
 PyAPI is a Python FastAPI-based application that allows execution of python code from a string input.
-Enables code interpreter environments for LLM's.
+Enables code interpreter environments for large language models (LLM's).
 
 ## Pre-requisits
 You need to have [docker](https://www.docker.com/) or a similar conatiner engine installed
